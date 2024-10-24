@@ -1,0 +1,108 @@
+body {
+    display: grid;
+    min-height: 100vh;
+    grid-template-rows: 4rem 1fr 4rem;
+    grid-template-columns: 1fr 7fr;
+    grid-template-areas:
+        "header header"
+        "nav contents"
+        "footer footer";
+}
+header {
+    grid-area: header;
+    background-color: #333333;
+    color: #f0f0f0;
+    text-align: center;
+    margin-top: -1rem;
+    margin-left: -1rem;
+}
+main {
+    grid-area: contents;
+    background-color: #555555;
+    color: #f0f0f0;
+    padding: 1rem;
+}
+nav {
+    grid-area: nav;
+    background-color: #444444;
+    color: #f0f0f0;
+    text-align: end;
+    padding: 1rem;
+    margin-left: -1rem;
+}
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+nav ul li {
+    display: block;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+nav ul li a {
+    text-decoration: none;
+    color: #222222;
+    font-weight: bold;
+}
+nav ul li a:hover {
+    color: #108bff;
+}
+footer {
+    grid-area: footer;
+    background-color: #333333;
+    color: #f0f0f0;
+    text-align: center;
+    margin-left: -1rem;
+    margin-bottom: -1rem;
+}
+.container {
+    display: grid;
+    grid-template-columns: auto 80px 256px; /* ヒートマップとカラーバーの幅を指定 */
+    grid-gap: 0.5rem; /* ヒートマップとカラーバーの間隔 */
+    width: fit-content; /* コンテナの幅を内容に合わせる */
+}
+
+#heatmapCanvas {
+    /* border: 1px solid #000; */
+    grid-column: 1; /* 1列目に配置 */
+    /*grid-row: 1 / span 2;*/
+}
+
+#colorbarCanvas {
+    /* border: 1px solid #000; */
+    grid-column: 2; /* 2列目に配置 */
+    /* grid-row: 1 / span 2; */
+}
+#graphCanvas {
+    grid-column: 3;
+    /*grid-row: 1;*/
+    /* width: 256; /* グラフの幅を指定 */
+    /* height: 256; /*  グラフの高さを指定 */
+}
+
+/* userに入力させる場合 */
+/* 両方に共通 */
+.settings-panel {
+    margin-bottom: 20px;
+}
+/*
+.settings-panel input {
+    margin: 0 10px;
+    padding: 5px;
+    width: 80px;
+}
+*/
+.settings-panel button {
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+/* radio-buttonの場合 */
+.settings-panel label {
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.settings-panel input[type="radio"] {
+    margin-right: 5px;
+}
