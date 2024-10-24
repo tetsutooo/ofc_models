@@ -108,7 +108,7 @@ async function run() {
     
     // 更新ボタンのイベントリスナー
     updateButton.addEventListener('click', async () => {
-        const newSeed = parseInt(widthInput.value);
+        const newSeed = parseInt(seedInput.value);
         const newAlpha = parseFloat(alphaInput.value);
         const newBeta = parseFloat(betaInput.value);
         if (newAlpha >= 0.00 && newAlpha <= 0.25 && newBeta >= 0.00 && newBeta <= 0.25) {
@@ -137,7 +137,7 @@ async function run() {
 }
 
 function animationLoop() {
-    heatmap.update();
+    system.update();
     drawConfiguration();
     updateGraph();
     animationId = requestAnimationFrame(animationLoop);
@@ -147,9 +147,9 @@ function drawConfiguration() {
     const canvas = document.getElementById('configurationCanvas');
     const ctx = canvas.getContext('2d');
     const imageData = new ImageData(
-        new Uint8ClampedArray(heatmap.get_data()),
-        heatmap.width(),
-        heatmap.height()
+        new Uint8ClampedArray(system.get_size_distribution()),
+        256,
+        256
     );
     ctx.putImageData(imageData, 0, 10);
 }
