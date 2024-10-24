@@ -168,7 +168,7 @@ function drawConfiguration() {
     const canvas = document.getElementById('configurationCanvas');
     const ctx = canvas.getContext('2d');
     const imageData = new ImageData(
-        new Uint8ClampedArray(system.get_normalized_z()),
+        new Uint8ClampedArray(singleDefectModel.get_normalized_z()),
         singleDefectModel.width(),
         singleDefectModel.height()
     );
