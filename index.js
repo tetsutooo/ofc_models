@@ -33,7 +33,7 @@ function initChart(width) {
     chart = new Chart(graphCanvas, {
         type: 'line',
         data: {
-            labels: Array.from({length: width}, (_, i) => i),
+            labels: Array.from({length: 100000}, (_, i) => i),
             datasets: [{
                 label: 'Cross-section at y=128',
                 data: [],
