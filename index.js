@@ -1,4 +1,4 @@
-import init, { Rational64, System } from './pkg/wasm_math.js';
+import init, { System } from './pkg/wasm_math.js';
 
 let system;
 let animationId;
