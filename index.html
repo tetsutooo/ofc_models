@@ -1,1 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>test</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="icon" type="image/png" href="favicon.png">
+    </head>
+    <body>
+        <header>
+            <h1>Page Title</h1>
+        </header>
+        <main>
+            <h2>Main</h2>
+            <div class="settings-panel">
+                <label>
+                    <input type="radio" name="widthSelect" value="128">
+                    128
+                </label>
+                <label>
+                    <input type="radio" name="widthSelect" value="256" checked>
+                    256
+                </label>
+                <button id="updateButton">Update</button>
+            </div>
+            <!-- //Userに入力させる
+            <div class="settings-panel">
+                <label for="widthInput">Width:</label>
+                <input type="number" id="widthInput" min="32" max="1024" value="256" step="32">
+                <button id="updateButton">Update</button>
+            </div>
+            -->
+            <div class="container">
+                <canvas id="heatmapCanvas"></canvas>
+                <canvas id="colorbarCanvas"></canvas>
+                <canvas id="graphCanvas"></canvas>
+            </div>
+        </main>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+        <footer>
+            <p>&copy; 2024 tetsutooo. All rights reserved.</p>
+        </footer>
 
+        <!-- スクリプトは </body> タグの直前に配置 -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+        <script type="module" src="index.js"></script>
+    </body>
+</html>
