@@ -85,13 +85,13 @@ footer {
 .settings-panel {
     margin-bottom: 20px;
 }
-/*
+
 .settings-panel input {
     margin: 0 10px;
     padding: 5px;
     width: 80px;
 }
-*/
+
 .settings-panel button {
     padding: 5px 15px;
     cursor: pointer;
