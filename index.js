@@ -118,10 +118,11 @@ async function run() {
     await init();
     //const widthInput = document.getElementById('widthInput');
     //const radioButtons = document.querySelectorAll('input[name="widthSelect"]');
+    const updateButton = document.getElementById('updateButton');
     const seedInput = document.getElementById('seedInput');
     const alphaInput = document.getElementById('alphaInput');
     const betaInput = document.getElementById('betaInput');
-    const updateButton = document.getElementById('updateButton');
+    
     
     // 初期化
     //await initSystem(parseInt(seedInput.value), parseFloat(alphaInput.value), parseFloat(betaInput.value));
