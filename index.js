@@ -1,12 +1,12 @@
-import init, { Rational64, Xorshift, System } from './pkg/wasm_math.js';
+import init, { SingleDefectModel } from './pkg/wasm_math.js';
 
-let system;
+let singleDefectModel;
 let animationId;
 let chart;
 
 async function initSystem(seed, alpha, beta) {
     const width = 256; // 256 * 256 で固定
-    system = System.new(seed, alpha, beta);
+    singleDefectModel = SingleDefectModel.new(seed, alpha, beta);
 
     // キャンバスのサイズを更新
     const configurationCanvas = document.getElementById('configurationCanvas');
@@ -158,7 +158,7 @@ async function run() {
 }
 
 function animationLoop() {
-    system.update();
+    singleDefectModel.update();
     drawConfiguration();
     //updateGraph();
     animationId = requestAnimationFrame(animationLoop);
@@ -169,8 +169,8 @@ function drawConfiguration() {
     const ctx = canvas.getContext('2d');
     const imageData = new ImageData(
         new Uint8ClampedArray(system.get_normalized_z()),
-        system.width(),
-        system.height()
+        singleDefectModel.width(),
+        singleDefectModel.height()
     );
     ctx.putImageData(imageData, 0, 10);
 }
@@ -218,7 +218,7 @@ function updateGraph() {
 */
 
 function updateGraph() {
-    const rawData = system.get_size_distribution();
+    const rawData = singleDefectModel.get_size_distribution();
     const dataArray = Array.from(rawData);
     
     const points = [];
