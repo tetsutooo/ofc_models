@@ -138,13 +138,13 @@ async function run() {
 
 function animationLoop() {
     heatmap.update();
-    drawHeatmap();
+    drawConfiguration();
     updateGraph();
     animationId = requestAnimationFrame(animationLoop);
 }
 
-function drawHeatmap() {
-    const canvas = document.getElementById('heatmapCanvas');
+function drawConfiguration() {
+    const canvas = document.getElementById('configurationCanvas');
     const ctx = canvas.getContext('2d');
     const imageData = new ImageData(
         new Uint8ClampedArray(heatmap.get_data()),
