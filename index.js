@@ -6,7 +6,8 @@ let chart;
 
 async function initSingleDefectModel(seed, alpha, beta) {
     const width = 256; // 256 * 256 で固定
-    singleDefectModel = SingleDefectModel.new(seed, alpha, beta);
+    //singleDefectModel = SingleDefectModel.new(seed, alpha, beta);
+    singleDefectModel = SingleDefectModel.new(7, 0.2, 0.0);
 
     // キャンバスのサイズを更新
     const configurationCanvas = document.getElementById('configurationCanvas');
