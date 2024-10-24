@@ -236,7 +236,7 @@ function updateGraph() {
 //     chart.update('none'); // アニメーションなしで更新
 // }
 
-document.addEventListener('DOMContentLoaded', run);
+
 
 function stopAnimation() {
     if (animationId) {
@@ -244,4 +244,4 @@ function stopAnimation() {
     }
 }
 
-
+document.addEventListener('DOMContentLoaded', run);
