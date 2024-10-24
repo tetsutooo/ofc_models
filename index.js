@@ -160,7 +160,7 @@ async function run() {
 }
 
 function animationLoop() {
-    //singleDefectModel.update();
+    singleDefectModel.update();
     drawConfiguration();
     updateGraph();
     animationId = requestAnimationFrame(animationLoop);
