@@ -81,28 +81,19 @@ footer {
 }
 
 /* userに入力させる場合 */
-/* 両方に共通 */
 .settings-panel {
     margin-bottom: 20px;
 }
-
 .settings-panel input {
     margin: 0 10px;
     padding: 5px;
     width: 80px;
 }
-
-.settings-panel button {
-    padding: 5px 15px;
-    cursor: pointer;
-}
-
-/* radio-buttonの場合 */
 .settings-panel label {
     margin-right: 20px;
     cursor: pointer;
 }
-
-.settings-panel input[type="radio"] {
-    margin-right: 5px;
+.settings-panel button {
+    padding: 5px 15px;
+    cursor: pointer;
 }
