@@ -190,7 +190,7 @@ function drawColorbar() {
 }
 
 function updateGraph() {
-    const rowData = heatmap.get_size_distribution());
+    const rowData = system.get_size_distribution());
     chart.data.datasets[0].data = rowData;
     chart.update();
 }
