@@ -28,7 +28,7 @@ async function initSystem(seed, alpha, beta) {
     initChart();
 }
 
-function initChart(width) {
+function initChart() {
     const graphCanvas = document.getElementById('graphCanvas');
     chart = new Chart(graphCanvas, {
         type: 'scatter',
