@@ -48,7 +48,7 @@ function initChart(width) {
             maintainAspectRatio: false,
             scales: {
                 x: {
-                    type: 'logarithmic',
+                    //type: 'logarithmic',
                     title: {
                         display: true,
                         text: 'avalanche size',
@@ -62,7 +62,7 @@ function initChart(width) {
                     },
                 },
                 y: {
-                    type: 'logarithmic',
+                    //type: 'logarithmic',
                     title: {
                         display: true,
                         text: 'Value',
