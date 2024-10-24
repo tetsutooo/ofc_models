@@ -4,7 +4,7 @@ let singleDefectModel;
 let animationId;
 let chart;
 
-async function initSystem(seed, alpha, beta) {
+async function initSingleDefectModel(seed, alpha, beta) {
     const width = 256; // 256 * 256 で固定
     singleDefectModel = SingleDefectModel.new(seed, alpha, beta);
 
@@ -124,7 +124,7 @@ async function run() {
     
     // 初期化
     //await initSystem(parseInt(seedInput.value), parseFloat(alphaInput.value), parseFloat(betaInput.value));
-    await initSystem(7, 0.20, 0.01);
+    await initSingleDefectModel(7, 0.20, 0.01);
     drawColorbar();
     
     // 更新ボタンのイベントリスナー
