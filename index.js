@@ -236,10 +236,12 @@ function updateGraph() {
     chart.update('none'); // アニメーションなしで更新
 }
 
+document.addEventListener('DOMContentLoaded', run);
+
 function stopAnimation() {
     if (animationId) {
         cancelAnimationFrame(animationId);
     }
 }
 
-document.addEventListener('DOMContentLoaded', run);
+
