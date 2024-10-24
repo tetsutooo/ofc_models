@@ -6,7 +6,8 @@ let chart;
 
 async function initSystem(seed, alpha, beta) {
     const width = 256; // 256 * 256 で固定
-    system = System.new(seed, alpha, beta);
+    //system = System.new(seed, alpha, beta);
+    system = System.new(7, 0.2, 0.0);
 
     // キャンバスのサイズを更新
     const configurationCanvas = document.getElementById('configurationCanvas');
