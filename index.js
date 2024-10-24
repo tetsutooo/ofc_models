@@ -6,8 +6,7 @@ let chart;
 
 async function initSystem(seed, alpha, beta) {
     const width = 256; // 256 * 256 で固定
-    //system = System.new(seed, alpha, beta);
-    system = System.new(7, 0.2, 0.0);
+    system = System.new(seed, alpha, beta);
 
     // キャンバスのサイズを更新
     const configurationCanvas = document.getElementById('configurationCanvas');
@@ -124,23 +123,24 @@ async function run() {
     const updateButton = document.getElementById('updateButton');
     
     // 初期化
-    await initSystem(parseInt(seedInput.value), parseFloat(alphaInput.value), parseFloat(betaInput.value));
+    //await initSystem(parseInt(seedInput.value), parseFloat(alphaInput.value), parseFloat(betaInput.value));
+    await initSystem(7, 0.20, 0.00);
     drawColorbar();
     
     // 更新ボタンのイベントリスナー
-    updateButton.addEventListener('click', async () => {
-        const newSeed = parseInt(seedInput.value);
-        const newAlpha = parseFloat(alphaInput.value);
-        const newBeta = parseFloat(betaInput.value);
-        if (newAlpha >= 0.00 && newAlpha <= 0.25 && newBeta >= 0.00 && newBeta <= 0.25) {
-            stopAnimation();
-            await initSystem(newSeed, newAlpha, newBeta);
-            drawColorbar();
-            animationLoop();
-        } else {
-            alert('Alpha and Beta must be between 0.00 and 0.25');
-        }
-    });
+    // updateButton.addEventListener('click', async () => {
+    //     const newSeed = parseInt(seedInput.value);
+    //     const newAlpha = parseFloat(alphaInput.value);
+    //     const newBeta = parseFloat(betaInput.value);
+    //     if (newAlpha >= 0.00 && newAlpha <= 0.25 && newBeta >= 0.00 && newBeta <= 0.25) {
+    //         stopAnimation();
+    //         await initSystem(newSeed, newAlpha, newBeta);
+    //         drawColorbar();
+    //         animationLoop();
+    //     } else {
+    //         alert('Alpha and Beta must be between 0.00 and 0.25');
+    //     }
+    // });
 
     // radioButtonで入力させる
     /*
