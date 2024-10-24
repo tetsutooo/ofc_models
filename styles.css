@@ -62,7 +62,7 @@ footer {
     width: fit-content; /* コンテナの幅を内容に合わせる */
 }
 
-#heatmapCanvas {
+#configurationCanvas {
     /* border: 1px solid #000; */
     grid-column: 1; /* 1列目に配置 */
     /*grid-row: 1 / span 2;*/
