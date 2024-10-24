@@ -124,7 +124,7 @@ async function run() {
     
     // 初期化
     //await initSystem(parseInt(seedInput.value), parseFloat(alphaInput.value), parseFloat(betaInput.value));
-    await initSystem(7, 0.20, 0.00);
+    await initSystem(7, 0.20, 0.01);
     drawColorbar();
     
     // 更新ボタンのイベントリスナー
