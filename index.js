@@ -17,101 +17,101 @@ async function initSingleDefectModel(seed, alpha, beta) {
     colorbarCanvas.width = 80;
     colorbarCanvas.height = width + 20;
 
-    // const graphCanvas = document.getElementById('graphCanvas');
-    // graphCanvas.width = width + 64;
-    // graphCanvas.height = width + 64;
+    const graphCanvas = document.getElementById('graphCanvas');
+    graphCanvas.width = width + 64;
+    graphCanvas.height = width + 64;
 
-    // // グラフの更新
-    // if (chart) {
-    //     chart.destroy();
-    // }
-    // initChart();
+    // グラフの更新
+    if (chart) {
+        chart.destroy();
+    }
+    initChart();
 }
 
-// function initChart() {
-//     const graphCanvas = document.getElementById('graphCanvas');
-//     chart = new Chart(graphCanvas, {
-//         type: 'scatter',
-//         data: {
-//             datasets: [{
-//                 label: 'Avalanche size distribution',
-//                 data: [],
-//                 borderColor: 'blue',
-//                 backgroundColor: 'blue',
-//                 borderWidth: 1,
-//                 pointRadius: 3,
-//             }]
-//         },
-//         options: {
-//             responsive: false,
-//             maintainAspectRatio: false,
-//             scales: {
-//                 x: {
-//                     type: 'logarithmic',
-//                     position: 'bottom',
-//                     title: {
-//                         display: true,
-//                         text: 'avalanche size',
-//                         color: 'white',
-//                     },
-//                     grid: {
-//                         color: 'rgba(255, 255, 255, 0.1)'
-//                     },
-//                     ticks: {
-//                         color: 'white',
-//                         callback: function(value, index, values) {
-//                             if (value === 1 || value === 10 || value === 100 || 
-//                                 value === 1000 || value === 10000 || value === 100000) {
-//                                 return value.toString();
-//                             }
-//                             return '';
-//                         },
-//                         autoSkip: true,
-//                         maxTicksLimit: 6
-//                     },
-//                     min: 1,
-//                     max: 100000
-//                 },
-//                 y: {
-//                     type: 'logarithmic',
-//                     title: {
-//                         display: true,
-//                         text: 'P(s)',
-//                         color: 'white',
-//                     },
-//                     grid: {
-//                         color: 'rgba(255, 255, 255, 0.1)'
-//                     },
-//                     ticks: {
-//                         color: 'white',
-//                         callback: function(value) {
-//                             return value.toExponential(0);
-//                         },
-//                         autoSkip: true,
-//                         maxTicksLimit: 6
-//                     }
-//                 }
-//             },
-//             plugins: {
-//                 legend: {
-//                     display: false
-//                 },
-//                 tooltip: {
-//                     callbacks: {
-//                         label: function(context) {
-//                             return `Size: ${context.parsed.x.toFixed(1)}, P(s): ${context.parsed.y.toExponential(2)}`;
-//                         }
-//                     }
-//                 }
-//             },
-//             animation: {
-//                 duration: 0
-//             },
-//             parsing: false,
-//             normalized: true
-//         }
-//     });
-// }
+function initChart() {
+    const graphCanvas = document.getElementById('graphCanvas');
+    chart = new Chart(graphCanvas, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Avalanche size distribution',
+                data: [],
+                borderColor: 'blue',
+                backgroundColor: 'blue',
+                borderWidth: 1,
+                pointRadius: 3,
+            }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    type: 'logarithmic',
+                    position: 'bottom',
+                    title: {
+                        display: true,
+                        text: 'avalanche size',
+                        color: 'white',
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'white',
+                        callback: function(value, index, values) {
+                            if (value === 1 || value === 10 || value === 100 || 
+                                value === 1000 || value === 10000 || value === 100000) {
+                                return value.toString();
+                            }
+                            return '';
+                        },
+                        autoSkip: true,
+                        maxTicksLimit: 6
+                    },
+                    min: 1,
+                    max: 100000
+                },
+                y: {
+                    type: 'logarithmic',
+                    title: {
+                        display: true,
+                        text: 'P(s)',
+                        color: 'white',
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'white',
+                        callback: function(value) {
+                            return value.toExponential(0);
+                        },
+                        autoSkip: true,
+                        maxTicksLimit: 6
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Size: ${context.parsed.x.toFixed(1)}, P(s): ${context.parsed.y.toExponential(2)}`;
+                        }
+                    }
+                }
+            },
+            animation: {
+                duration: 0
+            },
+            parsing: false,
+            normalized: true
+        }
+    });
+}
 
 async function run() {
     await init();
@@ -128,19 +128,19 @@ async function run() {
     drawColorbar();
     
     // 更新ボタンのイベントリスナー
-    // updateButton.addEventListener('click', async () => {
-    //     const newSeed = parseInt(seedInput.value);
-    //     const newAlpha = parseFloat(alphaInput.value);
-    //     const newBeta = parseFloat(betaInput.value);
-    //     if (newAlpha >= 0.00 && newAlpha <= 0.25 && newBeta >= 0.00 && newBeta <= 0.25) {
-    //         stopAnimation();
-    //         await initSystem(newSeed, newAlpha, newBeta);
-    //         drawColorbar();
-    //         animationLoop();
-    //     } else {
-    //         alert('Alpha and Beta must be between 0.00 and 0.25');
-    //     }
-    // });
+    updateButton.addEventListener('click', async () => {
+        const newSeed = parseInt(seedInput.value);
+        const newAlpha = parseFloat(alphaInput.value);
+        const newBeta = parseFloat(betaInput.value);
+        if (newAlpha >= 0.00 && newAlpha <= 0.25 && newBeta >= 0.00 && newBeta <= 0.25) {
+            stopAnimation();
+            await initSingleDefectModel(newSeed, newAlpha, newBeta);
+            drawColorbar();
+            animationLoop();
+        } else {
+            alert('Alpha and Beta must be between 0.00 and 0.25');
+        }
+    });
 
     // radioButtonで入力させる
     /*
@@ -160,7 +160,7 @@ async function run() {
 function animationLoop() {
     singleDefectModel.update();
     drawConfiguration();
-    //updateGraph();
+    updateGraph();
     animationId = requestAnimationFrame(animationLoop);
 }
 
@@ -209,32 +209,32 @@ function drawColorbar() {
         ctx.fillText(value, barWidth + 5, y);
     }
 }
-/*
+
 function updateGraph() {
     const rowData = system.get_size_distribution();
     chart.data.datasets[0].data = rowData;
     chart.update();
 }
-*/
 
-function updateGraph() {
-    const rawData = singleDefectModel.get_size_distribution();
-    const dataArray = Array.from(rawData);
+
+// function updateGraph() {
+//     const rawData = singleDefectModel.get_size_distribution();
+//     const dataArray = Array.from(rawData);
     
-    const points = [];
-    for (let i = 0; i < dataArray.length; i += 2) {
-        // 値が0より大きい場合のみデータポイントとして追加
-        if (dataArray[i] > 0 && dataArray[i+1] > 0) {
-            points.push({
-                x: dataArray[i],
-                y: dataArray[i + 1]
-            });
-        }
-    }
+//     const points = [];
+//     for (let i = 0; i < dataArray.length; i += 2) {
+//         // 値が0より大きい場合のみデータポイントとして追加
+//         if (dataArray[i] > 0 && dataArray[i+1] > 0) {
+//             points.push({
+//                 x: dataArray[i],
+//                 y: dataArray[i + 1]
+//             });
+//         }
+//     }
 
-    chart.data.datasets[0].data = points;
-    chart.update('none'); // アニメーションなしで更新
-}
+//     chart.data.datasets[0].data = points;
+//     chart.update('none'); // アニメーションなしで更新
+// }
 
 document.addEventListener('DOMContentLoaded', run);
 
