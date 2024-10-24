@@ -163,9 +163,9 @@ function drawColorbar() {
     const gradientHeight = height - 20;
 
     const gradient = ctx.createLinearGradient(0, gradientHeight, 0, 0);
-    gradient.addColorStop(0, 'rgb(0, 255, 0)');
-    gradient.addColorStop(0.5, 'rgb(255, 255, 0)');
-    gradient.addColorStop(1, 'rgb(255, 0, 0)');
+    gradient.addColorStop(0, 'rgb(0, 16, 0)');
+    gradient.addColorStop(0.5, 'rgb(0, 16, 127)');
+    gradient.addColorStop(1, 'rgb(0, 16, 255)');
 
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 10, barWidth, gradientHeight);
