@@ -25,22 +25,21 @@ async function initSystem(seed, alpha, beta) {
     if (chart) {
         chart.destroy();
     }
-    initChart(width);
+    initChart();
 }
 
 function initChart(width) {
     const graphCanvas = document.getElementById('graphCanvas');
     chart = new Chart(graphCanvas, {
-        type: 'line',
+        type: 'scatter',
         data: {
-            labels: Array.from({length: 100000}, (_, i) => i),
             datasets: [{
-                label: 'Cross-section at y=128',
+                label: 'Avalanche size distribution',
                 data: [],
                 borderColor: 'blue',
+                backgroundColor: 'blue',
                 borderWidth: 1,
-                fill: false,
-                pointRadius: 0,
+                pointRadius: 3,
             }]
         },
         options: {
@@ -48,47 +47,68 @@ function initChart(width) {
             maintainAspectRatio: false,
             scales: {
                 x: {
-                    //type: 'logarithmic',
+                    type: 'logarithmic',
+                    position: 'bottom',
                     title: {
                         display: true,
                         text: 'avalanche size',
                         color: 'white',
                     },
-                    min: 0.01,
-                    max: 100000,
-                    ticks: {
-                        maxTicksLimit: 5,
-                        color: 'white',
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
                     },
+                    ticks: {
+                        color: 'white',
+                        callback: function(value, index, values) {
+                            if (value === 1 || value === 10 || value === 100 || 
+                                value === 1000 || value === 10000 || value === 100000) {
+                                return value.toString();
+                            }
+                            return '';
+                        },
+                        autoSkip: true,
+                        maxTicksLimit: 6
+                    },
+                    min: 1,
+                    max: 100000
                 },
                 y: {
-                    //type: 'logarithmic',
+                    type: 'logarithmic',
                     title: {
                         display: true,
-                        text: 'Value',
+                        text: 'P(s)',
                         color: 'white',
                     },
-                    min: 0.01,
-                    max: 1,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
                     ticks: {
-                        maxTicksLimit: 5,
                         color: 'white',
-                    },
+                        callback: function(value) {
+                            return value.toExponential(0);
+                        },
+                        autoSkip: true,
+                        maxTicksLimit: 6
+                    }
                 }
             },
             plugins: {
                 legend: {
-                    display: false,
+                    display: false
                 },
-                title: {
-                    display: true,
-                    text: 'Avalanche size distribution',
-                    color: 'white',
-                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Size: ${context.parsed.x.toFixed(1)}, P(s): ${context.parsed.y.toExponential(2)}`;
+                        }
+                    }
+                }
             },
             animation: {
-                duration: 0,
+                duration: 0
             },
+            parsing: false,
+            normalized: true
         }
     });
 }
@@ -188,11 +208,31 @@ function drawColorbar() {
         ctx.fillText(value, barWidth + 5, y);
     }
 }
-
+/*
 function updateGraph() {
     const rowData = system.get_size_distribution();
     chart.data.datasets[0].data = rowData;
     chart.update();
+}
+*/
+
+function updateGraph() {
+    const rawData = system.get_size_distribution();
+    const dataArray = Array.from(rawData);
+    
+    const points = [];
+    for (let i = 0; i < dataArray.length; i += 2) {
+        // 値が0より大きい場合のみデータポイントとして追加
+        if (dataArray[i] > 0 && dataArray[i+1] > 0) {
+            points.push({
+                x: dataArray[i],
+                y: dataArray[i + 1]
+            });
+        }
+    }
+
+    chart.data.datasets[0].data = points;
+    chart.update('none'); // アニメーションなしで更新
 }
 
 function stopAnimation() {
