@@ -1,27 +1,17 @@
-import init, { HeatmapData } from './pkg/wasm_math.js';
+import init, { System } from './pkg/wasm_math.js';
 
-let heatmap;
+let system;
 let animationId;
 let chart;
 
-async function initHeatmap(width) {
-    const height = width; // 正方形を維持
-    heatmap = HeatmapData.new(width, height);
-
-    // 初期データの設定
-    const padding = Math.floor(width * 0.0625); // 16/256の比率を維持
-    for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-            if (x > padding && x < (width - padding) && y > padding && y < (height - padding)) {
-                heatmap.set_value(x, y, Math.random());
-            }
-        }
-    }
+async function initSystem(seed, alpha, beta) {
+    const width = 256; // 256 * 256 で固定
+    system = System.new(seed, alpha, beta);
 
     // キャンバスのサイズを更新
-    const heatmapCanvas = document.getElementById('heatmapCanvas');
-    heatmapCanvas.width = width;
-    heatmapCanvas.height = width + 20;
+    const configurationCanvas = document.getElementById('configurationCanvas');
+    configurationCanvas.width = width;
+    configurationCanvas.height = width + 20;
 
     const colorbarCanvas = document.getElementById('colorbarCanvas');
     colorbarCanvas.width = 80;
@@ -58,22 +48,28 @@ function initChart(width) {
             maintainAspectRatio: false,
             scales: {
                 x: {
+                    type: 'logarithmic',
                     title: {
                         display: true,
                         text: 'avalanche size',
                         color: 'white',
                     },
+                    min: 0.01,
+                    max: 100000,
                     ticks: {
                         maxTicksLimit: 5,
                         color: 'white',
                     },
                 },
                 y: {
+                    type: 'logarithmic',
                     title: {
                         display: true,
                         text: 'Value',
                         color: 'white',
                     },
+                    min: 0.01,
+                    max: 1,
                     ticks: {
                         maxTicksLimit: 5,
                         color: 'white',
@@ -100,30 +96,33 @@ function initChart(width) {
 async function run() {
     await init();
     //const widthInput = document.getElementById('widthInput');
-    const radioButtons = document.querySelectorAll('input[name="widthSelect"]');
+    //const radioButtons = document.querySelectorAll('input[name="widthSelect"]');
+    const seedInput = document.getElementById('seedInput');
+    const alphaInput = document.getElementById('alphaInput');
+    const betaInput = document.getElementById('betaInput');
     const updateButton = document.getElementById('updateButton');
     
     // 初期化
-    //await initHeatmap(parseInt(widthInput.value));
-    //drawColorbar();
-    await initHeatmap(256);
+    await initHeatmap(parseInt(seedInput.value), parseFloat(alphaInput.value), parseFloat(betaInput.value));
     drawColorbar();
     
     // 更新ボタンのイベントリスナー
-    // Userに入力させる
-    /*updateButton.addEventListener('click', async () => {
-        const newWidth = parseInt(widthInput.value);
-        if (newWidth >= 32 && newWidth <= 1024) {
+    updateButton.addEventListener('click', async () => {
+        const newSeed = parseInt(widthInput.value);
+        const newAlpha = parseFloat(alphaInput.value);
+        const newBeta = parseFloat(betaInput.value);
+        if (newAlpha >= 0.00 && newAlpha <= 0.25 && newBeta >= 0.00 && newBeta <= 0.25) {
             stopAnimation();
-            await initHeatmap(newWidth);
+            await initHeatmap(newSeed, newAlpha, newBeta);
             drawColorbar();
             animationLoop();
         } else {
-            alert('Width must be between 32 and 1024');
+            alert('Alpha and Beta must be between 0.00 and 0.25');
         }
-    });*/
+    });
 
-    // トグルボタンで入力させる
+    // radioButtonで入力させる
+    /*
     updateButton.addEventListener('click', async () => {
         const selectedRadio = document.querySelector('input[name="widthSelect"]:checked');
         const newWidth = parseInt(selectedRadio.value);
@@ -132,6 +131,7 @@ async function run() {
         drawColorbar();
         animationLoop();
     });
+    */
 
     animationLoop();
 }
