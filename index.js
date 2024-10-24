@@ -17,101 +17,101 @@ async function initSystem(seed, alpha, beta) {
     colorbarCanvas.width = 80;
     colorbarCanvas.height = width + 20;
 
-    const graphCanvas = document.getElementById('graphCanvas');
-    graphCanvas.width = width + 64;
-    graphCanvas.height = width + 64;
+    // const graphCanvas = document.getElementById('graphCanvas');
+    // graphCanvas.width = width + 64;
+    // graphCanvas.height = width + 64;
 
-    // グラフの更新
-    if (chart) {
-        chart.destroy();
-    }
-    initChart();
+    // // グラフの更新
+    // if (chart) {
+    //     chart.destroy();
+    // }
+    // initChart();
 }
 
-function initChart() {
-    const graphCanvas = document.getElementById('graphCanvas');
-    chart = new Chart(graphCanvas, {
-        type: 'scatter',
-        data: {
-            datasets: [{
-                label: 'Avalanche size distribution',
-                data: [],
-                borderColor: 'blue',
-                backgroundColor: 'blue',
-                borderWidth: 1,
-                pointRadius: 3,
-            }]
-        },
-        options: {
-            responsive: false,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    type: 'logarithmic',
-                    position: 'bottom',
-                    title: {
-                        display: true,
-                        text: 'avalanche size',
-                        color: 'white',
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    },
-                    ticks: {
-                        color: 'white',
-                        callback: function(value, index, values) {
-                            if (value === 1 || value === 10 || value === 100 || 
-                                value === 1000 || value === 10000 || value === 100000) {
-                                return value.toString();
-                            }
-                            return '';
-                        },
-                        autoSkip: true,
-                        maxTicksLimit: 6
-                    },
-                    min: 1,
-                    max: 100000
-                },
-                y: {
-                    type: 'logarithmic',
-                    title: {
-                        display: true,
-                        text: 'P(s)',
-                        color: 'white',
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    },
-                    ticks: {
-                        color: 'white',
-                        callback: function(value) {
-                            return value.toExponential(0);
-                        },
-                        autoSkip: true,
-                        maxTicksLimit: 6
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return `Size: ${context.parsed.x.toFixed(1)}, P(s): ${context.parsed.y.toExponential(2)}`;
-                        }
-                    }
-                }
-            },
-            animation: {
-                duration: 0
-            },
-            parsing: false,
-            normalized: true
-        }
-    });
-}
+// function initChart() {
+//     const graphCanvas = document.getElementById('graphCanvas');
+//     chart = new Chart(graphCanvas, {
+//         type: 'scatter',
+//         data: {
+//             datasets: [{
+//                 label: 'Avalanche size distribution',
+//                 data: [],
+//                 borderColor: 'blue',
+//                 backgroundColor: 'blue',
+//                 borderWidth: 1,
+//                 pointRadius: 3,
+//             }]
+//         },
+//         options: {
+//             responsive: false,
+//             maintainAspectRatio: false,
+//             scales: {
+//                 x: {
+//                     type: 'logarithmic',
+//                     position: 'bottom',
+//                     title: {
+//                         display: true,
+//                         text: 'avalanche size',
+//                         color: 'white',
+//                     },
+//                     grid: {
+//                         color: 'rgba(255, 255, 255, 0.1)'
+//                     },
+//                     ticks: {
+//                         color: 'white',
+//                         callback: function(value, index, values) {
+//                             if (value === 1 || value === 10 || value === 100 || 
+//                                 value === 1000 || value === 10000 || value === 100000) {
+//                                 return value.toString();
+//                             }
+//                             return '';
+//                         },
+//                         autoSkip: true,
+//                         maxTicksLimit: 6
+//                     },
+//                     min: 1,
+//                     max: 100000
+//                 },
+//                 y: {
+//                     type: 'logarithmic',
+//                     title: {
+//                         display: true,
+//                         text: 'P(s)',
+//                         color: 'white',
+//                     },
+//                     grid: {
+//                         color: 'rgba(255, 255, 255, 0.1)'
+//                     },
+//                     ticks: {
+//                         color: 'white',
+//                         callback: function(value) {
+//                             return value.toExponential(0);
+//                         },
+//                         autoSkip: true,
+//                         maxTicksLimit: 6
+//                     }
+//                 }
+//             },
+//             plugins: {
+//                 legend: {
+//                     display: false
+//                 },
+//                 tooltip: {
+//                     callbacks: {
+//                         label: function(context) {
+//                             return `Size: ${context.parsed.x.toFixed(1)}, P(s): ${context.parsed.y.toExponential(2)}`;
+//                         }
+//                     }
+//                 }
+//             },
+//             animation: {
+//                 duration: 0
+//             },
+//             parsing: false,
+//             normalized: true
+//         }
+//     });
+// }
 
 async function run() {
     await init();
@@ -160,7 +160,7 @@ async function run() {
 function animationLoop() {
     system.update();
     drawConfiguration();
-    updateGraph();
+    //updateGraph();
     animationId = requestAnimationFrame(animationLoop);
 }
 
