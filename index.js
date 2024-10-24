@@ -1,13 +1,13 @@
 import init, { SingleDefectModel } from './pkg/wasm_math.js';
 
-let singleDefectModel;
+let singleDefectModelSystem;
 let animationId;
 let chart;
 
 async function initSingleDefectModel(seed, alpha, beta) {
     const width = 256; // 256 * 256 で固定
     //singleDefectModel = SingleDefectModel.new(seed, alpha, beta);
-    singleDefectModel = SingleDefectModel.new(7, 0.2, 0.0);
+    singleDefectModelSystem = SingleDefectModel.new(7, 0.2, 0.0);
 
     // キャンバスのサイズを更新
     const configurationCanvas = document.getElementById('configurationCanvas');
@@ -169,9 +169,9 @@ function drawConfiguration() {
     const canvas = document.getElementById('configurationCanvas');
     const ctx = canvas.getContext('2d');
     const imageData = new ImageData(
-        new Uint8ClampedArray(singleDefectModel.get_normalized_z()),
-        singleDefectModel.width(),
-        singleDefectModel.height()
+        new Uint8ClampedArray(singleDefectModelSystem.get_normalized_z()),
+        singleDefectModelSystem.width(),
+        singleDefectModelSystem.height()
     );
     ctx.putImageData(imageData, 0, 10);
 }
@@ -238,7 +238,7 @@ function drawColorbar() {
 // }
 
 function updateGraph() {
-    const rawData = singleDefectModel.get_size_distribution();
+    const rawData = singleDefectModelSystem.get_size_distribution();
     const dataArray = Array.from(rawData);
     
     const points = [];
