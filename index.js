@@ -211,11 +211,11 @@ function drawColorbar() {
     }
 }
 
-function updateGraph() {
-    const rowData = system.get_size_distribution();
-    chart.data.datasets[0].data = rowData;
-    chart.update();
-}
+// function updateGraph() {
+//     const rowData = system.get_size_distribution();
+//     chart.data.datasets[0].data = rowData;
+//     chart.update();
+// }
 
 
 // function updateGraph() {
@@ -236,6 +236,24 @@ function updateGraph() {
 //     chart.data.datasets[0].data = points;
 //     chart.update('none'); // アニメーションなしで更新
 // }
+
+function updateGraph() {
+    const rawData = singleDefectModel.get_size_distribution();
+    const dataArray = Array.from(rawData);
+    
+    const points = [];
+    for (let i = 0; i < dataArray.length; i += 2) {
+        if (dataArray[i] > 0 && dataArray[i+1] > 0) {
+            points.push({
+                x: dataArray[i],
+                y: dataArray[i + 1]
+            });
+        }
+    }
+
+    chart.data.datasets[0].data = points;
+    chart.update('none');
+}
 
 
 
