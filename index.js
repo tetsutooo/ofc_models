@@ -147,7 +147,7 @@ function drawConfiguration() {
     const canvas = document.getElementById('configurationCanvas');
     const ctx = canvas.getContext('2d');
     const imageData = new ImageData(
-        new Uint8ClampedArray(system.get_size_distribution()),
+        new Uint8ClampedArray(system.get_normalized_z()),
         256,
         256
     );
@@ -190,7 +190,7 @@ function drawColorbar() {
 }
 
 function updateGraph() {
-    const rowData = heatmap.get_row_data(Math.floor(heatmap.height() / 2));
+    const rowData = heatmap.get_size_distribution());
     chart.data.datasets[0].data = rowData;
     chart.update();
 }
