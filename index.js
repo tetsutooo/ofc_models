@@ -1,22 +1,54 @@
 import init, { Gol } from './pkg/game_of_life.js';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 
 let animationId = null;
 let gol = null;
 
-// React component for the line chart
-function LineChartComponent({ data }) {
-    return (
-        <LineChart width={800} height={200} data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="x" />
-            <YAxis domain={[0, 1]} />
-            <Tooltip />
-            <Line type="stepAfter" dataKey="value" stroke="#00B4D8" />
-        </LineChart>
-    );
+// Line graph settings
+const GRAPH_WIDTH = 800;
+const GRAPH_HEIGHT = 200;
+const PADDING = 40;
+
+function drawLineGraph(data) {
+    const canvas = document.getElementById('line-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas size
+    canvas.width = GRAPH_WIDTH;
+    canvas.height = GRAPH_HEIGHT;
+
+    // Clear canvas
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, GRAPH_WIDTH, GRAPH_HEIGHT);
+
+    // Draw axis
+    ctx.beginPath();
+    ctx.strokeStyle = '#666';
+    ctx.moveTo(PADDING, PADDING);
+    ctx.lineTo(PADDING, GRAPH_HEIGHT - PADDING);
+    ctx.lineTo(GRAPH_WIDTH - PADDING, GRAPH_HEIGHT - PADDING);
+    ctx.stroke();
+
+    // Draw data points
+    if (data && data.length > 0) {
+        const xScale = (GRAPH_WIDTH - 2 * PADDING) / data.length;
+        const yScale = (GRAPH_HEIGHT - 2 * PADDING);
+
+        ctx.beginPath();
+        ctx.strokeStyle = '#00B4D8';
+        ctx.lineWidth = 2;
+
+        for (let i = 0; i < data.length; i++) {
+            const x = PADDING + i * xScale;
+            const y = GRAPH_HEIGHT - PADDING - (data[i].value * yScale);
+            
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
 }
 
 async function initGame() {
@@ -27,27 +59,18 @@ async function initGame() {
     
     // Set canvas size
     canvas.width = 800;
-    canvas.height = 600;
+    canvas.height = 400;
     
     // Initialize game
     gol = new Gol(canvas.width, canvas.height);
     
     // Draw initial state
     gol.display(ctx);
-    
-    // Initialize line chart with data from middle row
-    updateLineChart();
-}
 
-function updateLineChart() {
+    // Initialize line graph
     const middleRow = Math.floor(gol.rows / 2);
-    const data = gol.get_horizontal_line_data(middleRow);
-    
-    // Convert data to array of objects for recharts
-    ReactDOM.render(
-        <LineChartComponent data={Array.from(data)} />,
-        document.getElementById('line-chart')
-    );
+    const lineData = Array.from(gol.get_horizontal_line_data(middleRow));
+    drawLineGraph(lineData);
 }
 
 function animate() {
@@ -56,7 +79,11 @@ function animate() {
     
     gol.generate();
     gol.display(ctx);
-    updateLineChart();
+
+    // Update line graph
+    const middleRow = Math.floor(gol.rows / 2);
+    const lineData = Array.from(gol.get_horizontal_line_data(middleRow));
+    drawLineGraph(lineData);
     
     animationId = requestAnimationFrame(animate);
 }
@@ -85,7 +112,11 @@ document.getElementById('reset-btn').addEventListener('click', () => {
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
         gol.display(ctx);
-        updateLineChart();
+
+        // Reset line graph
+        const middleRow = Math.floor(gol.rows / 2);
+        const lineData = Array.from(gol.get_horizontal_line_data(middleRow));
+        drawLineGraph(lineData);
     }
 });
 
