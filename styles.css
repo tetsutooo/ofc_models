@@ -9,6 +9,9 @@ header {
     color: white;
     padding: 20px;
     text-align: center;
+    width: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 header h1 {
@@ -22,6 +25,7 @@ header h1 {
     position: fixed;
     top: 0;
     left: 0;
+    padding-top: 70px; /* ヘッダーの高さ分余白を追加 */
 }
 
 .sidebar ul {
