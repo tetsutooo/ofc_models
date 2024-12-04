@@ -47,3 +47,8 @@ header h1 {
 .sidebar a:hover {
     text-decoration: underline;
 }
+
+main {
+    margin-left: 100px; /* サイドバーの幅分の余白 */
+    padding: 20px;
+}
