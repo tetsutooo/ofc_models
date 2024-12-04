@@ -1,64 +1,57 @@
 <!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ofc models</title>
-        <link rel="stylesheet" href="styles.css">
-        <link rel="icon" type="image/png" href="favicon.png">
-    </head>
-    <body>
-        <header>
-            <h1>OFC Models</h1>
-        </header>
-        <main>
-            <!-- RadioButton
-            <div class="settings-panel">
-                <label>
-                    <input type="radio" name="widthSelect" value="128">
-                    128
-                </label>
-                <label>
-                    <input type="radio" name="widthSelect" value="256" checked>
-                    256
-                </label>
-                <button id="updateButton">Update</button>
-            </div>
-            -->
-            <!-- //Userに入力させる -->
-            <div class="settings-panel">
-                <button id="updateButton">Update</button>
-                
-                <label for="seedInput">Seed:</label>
-                <input type="number" id="seedInput" min="0" max="1024" value="1" step="1">
-                <!-- 18446744073709551615 -->
-                
-                <label for="alphaInput">alpha:</label>
-                <input type="number" id="alphaInput" min="0.00" max="0.25" value="0.20" step="0.01">
-                
-                <label for="betaInput">beta:</label>
-                <input type="number" id="betaInput" min="0.00" max="0.25" value="0.02" step="0.01">
-            </div>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Game of Life - Rust + WebAssembly</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 1px solid #333;
+            margin: 20px;
+        }
+        .controls {
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Game of Life</h1>
+    <div id="game-container"></div>
+    <div class="controls">
+        <button id="play-pause">Play/Pause</button>
+        <button id="reset">Reset</button>
+    </div>
+    <script type="module">
+        import init from './pkg/game_of_life.js';
 
-            <div class="container">
-                <canvas id="configurationCanvas"></canvas>
-                <canvas id="colorbarCanvas"></canvas>
-                <canvas id="graphCanvas"></canvas>
-            </div>
-        </main>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="#original_ofc_model.html">Original OFC Model</a></li>
-                <li><a href="#single_defect_model.html">Single Defect Model</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-        <footer>
-            <p>&copy; 2024 tetsutooo. All rights reserved.</p>
-        </footer>
-        
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"></script>
-        <script type="module" src="index.js"></script>
-    </body>
+        async function run() {
+            await init();
+        }
+
+        run();
+    </script>
+</body>
 </html>
