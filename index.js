@@ -1,267 +1,92 @@
-import init, { SingleDefectModel } from './pkg/wasm_math.js';
+// index.js
+import { Universe } from "game-of-life";
+import { memory } from "game-of-life/game_of_life_bg";
 
-let singleDefectModelSystem;
-let animationId;
-let chart;
+const CELL_SIZE = 5;
+const GRID_COLOR = "#CCCCCC";
+const DEAD_COLOR = "#FFFFFF";
+const ALIVE_COLOR = "#000000";
 
-async function initSingleDefectModel(seed, alpha, beta) {
-    const width = 256; // 256 * 256 で固定
-    //singleDefectModel = SingleDefectModel.new(seed, alpha, beta);
-    singleDefectModelSystem = SingleDefectModel.new(7, 0.2, 0.0);
+const universe = Universe.new(64, 64);
+const width = universe.width();
+const height = universe.height();
 
-    // キャンバスのサイズを更新
-    const configurationCanvas = document.getElementById('configurationCanvas');
-    configurationCanvas.width = width;
-    configurationCanvas.height = width + 20;
+const canvas = document.getElementById("game-of-life-canvas");
+canvas.height = (CELL_SIZE + 1) * height + 1;
+canvas.width = (CELL_SIZE + 1) * width + 1;
 
-    const colorbarCanvas = document.getElementById('colorbarCanvas');
-    colorbarCanvas.width = 80;
-    colorbarCanvas.height = width + 20;
+const ctx = canvas.getContext('2d');
 
-    const graphCanvas = document.getElementById('graphCanvas');
-    graphCanvas.width = width + 64;
-    graphCanvas.height = width + 64;
+function drawGrid() {
+    ctx.beginPath();
+    ctx.strokeStyle = GRID_COLOR;
 
-    // グラフの更新
-    if (chart) {
-        chart.destroy();
+    // Vertical lines
+    for (let i = 0; i <= width; i++) {
+        ctx.moveTo(i * (CELL_SIZE + 1) + 1, 0);
+        ctx.lineTo(i * (CELL_SIZE + 1) + 1, (CELL_SIZE + 1) * height + 1);
     }
-    initChart();
+
+    // Horizontal lines
+    for (let j = 0; j <= height; j++) {
+        ctx.moveTo(0, j * (CELL_SIZE + 1) + 1);
+        ctx.lineTo((CELL_SIZE + 1) * width + 1, j * (CELL_SIZE + 1) + 1);
+    }
+
+    ctx.stroke();
 }
 
-function initChart() {
-    const graphCanvas = document.getElementById('graphCanvas');
-    chart = new Chart(graphCanvas, {
-        type: 'scatter',
-        data: {
-            datasets: [{
-                label: 'Avalanche size distribution',
-                data: [],
-                borderColor: 'blue',
-                backgroundColor: 'blue',
-                borderWidth: 1,
-                pointRadius: 3,
-            }]
-        },
-        options: {
-            responsive: false,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    type: 'logarithmic',
-                    position: 'bottom',
-                    title: {
-                        display: true,
-                        text: 'avalanche size',
-                        color: 'white',
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    },
-                    ticks: {
-                        color: 'white',
-                        callback: function(value, index, values) {
-                            if (value === 1 || value === 10 || value === 100 || 
-                                value === 1000 || value === 10000 || value === 100000) {
-                                return value.toString();
-                            }
-                            return '';
-                        },
-                        autoSkip: true,
-                        maxTicksLimit: 6
-                    },
-                    min: 1,
-                    max: 100000
-                },
-                y: {
-                    type: 'logarithmic',
-                    title: {
-                        display: true,
-                        text: 'P(s)',
-                        color: 'white',
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    },
-                    ticks: {
-                        color: 'white',
-                        callback: function(value) {
-                            return value.toExponential(0);
-                        },
-                        autoSkip: true,
-                        maxTicksLimit: 6
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return `Size: ${context.parsed.x.toFixed(1)}, P(s): ${context.parsed.y.toExponential(2)}`;
-                        }
-                    }
-                }
-            },
-            animation: {
-                duration: 0
-            },
-            parsing: false,
-            normalized: true
+function drawCells() {
+    const cellsPtr = universe.cells();
+    const cells = new Uint8Array(memory.buffer, cellsPtr, width * height);
+
+    ctx.beginPath();
+
+    for (let row = 0; row < height; row++) {
+        for (let col = 0; col < width; col++) {
+            const idx = row * width + col;
+
+            ctx.fillStyle = cells[idx] === 1 ? ALIVE_COLOR : DEAD_COLOR;
+
+            ctx.fillRect(
+                col * (CELL_SIZE + 1) + 1,
+                row * (CELL_SIZE + 1) + 1,
+                CELL_SIZE,
+                CELL_SIZE
+            );
         }
-    });
-}
-
-async function run() {
-    await init();
-    //const widthInput = document.getElementById('widthInput');
-    //const radioButtons = document.querySelectorAll('input[name="widthSelect"]');
-    const updateButton = document.getElementById('updateButton');
-    const seedInput = document.getElementById('seedInput');
-    const alphaInput = document.getElementById('alphaInput');
-    const betaInput = document.getElementById('betaInput');
-    
-    
-    // 初期化
-    //await initSystem(parseInt(seedInput.value), parseFloat(alphaInput.value), parseFloat(betaInput.value));
-    await initSingleDefectModel(7, 0.20, 0.01);
-    drawColorbar();
-    
-    // 更新ボタンのイベントリスナー
-    updateButton.addEventListener('click', async () => {
-        const newSeed = parseInt(seedInput.value);
-        const newAlpha = parseFloat(alphaInput.value);
-        const newBeta = parseFloat(betaInput.value);
-        if (newAlpha >= 0.00 && newAlpha <= 0.25 && newBeta >= 0.00 && newBeta <= 0.25) {
-            stopAnimation();
-            await initSingleDefectModel(newSeed, newAlpha, newBeta);
-            drawColorbar();
-            animationLoop();
-        } else {
-            alert('Alpha and Beta must be between 0.00 and 0.25');
-        }
-    });
-
-    // radioButtonで入力させる
-    /*
-    updateButton.addEventListener('click', async () => {
-        const selectedRadio = document.querySelector('input[name="widthSelect"]:checked');
-        const newWidth = parseInt(selectedRadio.value);
-        stopAnimation();
-        await initHeatmap(newWidth);
-        drawColorbar();
-        animationLoop();
-    });
-    */
-
-    animationLoop();
-}
-
-function animationLoop() {
-    singleDefectModel.update();
-    drawConfiguration();
-    updateGraph();
-    animationId = requestAnimationFrame(animationLoop);
-}
-
-function drawConfiguration() {
-    const canvas = document.getElementById('configurationCanvas');
-    const ctx = canvas.getContext('2d');
-    const imageData = new ImageData(
-        new Uint8ClampedArray(singleDefectModelSystem.get_normalized_z()),
-        singleDefectModelSystem.width(),
-        singleDefectModelSystem.height()
-    );
-    ctx.putImageData(imageData, 0, 10);
-}
-
-function drawColorbar() {
-    const canvas = document.getElementById('colorbarCanvas');
-    const ctx = canvas.getContext('2d');
-    const width = canvas.width;
-    const height = canvas.height;
-    const barWidth = 16;
-    const gradientHeight = height - 20;
-
-    const gradient = ctx.createLinearGradient(0, gradientHeight, 0, 0);
-    gradient.addColorStop(0, 'rgb(0, 16, 0)');
-    gradient.addColorStop(0.5, 'rgb(0, 16, 127)');
-    gradient.addColorStop(1, 'rgb(0, 16, 255)');
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 10, barWidth, gradientHeight);
-
-    ctx.fillStyle = 'white';
-    ctx.font = '12px Arial';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-
-    const steps = 2;
-    for (let i = 0; i <= steps; i++) {
-        const y = 10 + (1 - i / steps) * gradientHeight;
-        const value = (i / steps).toFixed(1);
-
-        ctx.beginPath();
-        ctx.moveTo(barWidth - 5, y);
-        ctx.lineTo(barWidth, y);
-        ctx.stroke();
-
-        ctx.fillText(value, barWidth + 5, y);
     }
+
+    ctx.stroke();
 }
 
-function updateGraph() {
-    const rowData = system.get_size_distribution();
-    chart.data.datasets[0].data = rowData;
-    chart.update();
+canvas.addEventListener("click", event => {
+    const boundingRect = canvas.getBoundingClientRect();
+
+    const scaleX = canvas.width / boundingRect.width;
+    const scaleY = canvas.height / boundingRect.height;
+
+    const canvasLeft = (event.clientX - boundingRect.left) * scaleX;
+    const canvasTop = (event.clientY - boundingRect.top) * scaleY;
+
+    const row = Math.min(Math.floor(canvasTop / (CELL_SIZE + 1)), height - 1);
+    const col = Math.min(Math.floor(canvasLeft / (CELL_SIZE + 1)), width - 1);
+
+    universe.toggle_cell(row, col);
+
+    drawGrid();
+    drawCells();
+});
+
+function renderLoop() {
+    universe.tick();
+
+    drawGrid();
+    drawCells();
+
+    requestAnimationFrame(renderLoop);
 }
 
-
-// function updateGraph() {
-//     const rawData = singleDefectModel.get_size_distribution();
-//     const dataArray = Array.from(rawData);
-    
-//     const points = [];
-//     for (let i = 0; i < dataArray.length; i += 2) {
-//         // 値が0より大きい場合のみデータポイントとして追加
-//         if (dataArray[i] > 0 && dataArray[i+1] > 0) {
-//             points.push({
-//                 x: dataArray[i],
-//                 y: dataArray[i + 1]
-//             });
-//         }
-//     }
-
-//     chart.data.datasets[0].data = points;
-//     chart.update('none'); // アニメーションなしで更新
-// }
-
-// function updateGraph() {
-//     const rawData = singleDefectModelSystem.get_size_distribution();
-//     const dataArray = Array.from(rawData);
-    
-//     const points = [];
-//     for (let i = 0; i < dataArray.length; i += 2) {
-//         if (dataArray[i] > 0 && dataArray[i+1] > 0) {
-//             points.push({
-//                 x: dataArray[i],
-//                 y: dataArray[i + 1]
-//             });
-//         }
-//     }
-
-//     chart.data.datasets[0].data = points;
-//     chart.update('none');
-// }
-
-
-
-function stopAnimation() {
-    if (animationId) {
-        cancelAnimationFrame(animationId);
-    }
-}
-
-document.addEventListener('DOMContentLoaded', run);
+drawGrid();
+drawCells();
+requestAnimationFrame(renderLoop);
