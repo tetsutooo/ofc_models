@@ -19,16 +19,16 @@
         </ul>
     </nav>
     <main>
-        <div class="game-container">
+        <div class="content-center">
             <canvas id="game-canvas"></canvas>
             <div class="controls">
                 <button id="start-btn">Start</button>
-                <button id="stop-btn">Stop</button>
+                <button id="stop-btn" disabled>Stop</button>
                 <button id="reset-btn">Reset</button>
             </div>
+            <canvas id="line-canvas"></canvas>
         </div>
-        <div id="line-chart"></div>
     </main>
-    <script type="module" src="index.js"></script>
+    <script src="index.js" type="module"></script>
 </body>
 </html>
