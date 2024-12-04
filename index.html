@@ -2,39 +2,269 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Game of Life - WASM</title>
+    <title>Conway's Game of Life - WASM</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #2a2a2a;
+            --accent-color: #4CAF50;
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: var(--text-color);
+            font-size: 2.5em;
+            margin-bottom: 1em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .canvas-container {
+            position: relative;
+            margin: 20px auto;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
         canvas {
-            border: 1px solid black;
+            display: block;
+            background: var(--primary-color);
+            border-radius: 8px;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            canvas {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        .stats {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            display: flex;
+            gap: 10px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <canvas id="game-of-life-canvas" width="512" height="512"></canvas>
-    <br>
-    <button id="reset-button">Reset</button>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="container">
+        <h1>Conway's Game of Life</h1>
+        
+        <div class="canvas-container">
+            <canvas id="game-of-life-canvas" width="640" height="360"></canvas>
+            <div class="stats">
+                <div class="stat">
+                    <i class="fas fa-clock"></i>
+                    <span id="generation">Gen: 0</span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-heart"></i>
+                    <span id="alive">Alive: 0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="reset-button">
+                <i class="fas fa-redo"></i>
+                Reset
+            </button>
+            <button id="pause-button">
+                <i class="fas fa-pause" id="pause-icon"></i>
+                <span id="pause-text">Pause</span>
+            </button>
+        </div>
+
+        <div class="info">
+            <p>Click the Reset button to generate a new random pattern. Each cell follows Conway's rules of life:
+            any live cell with 2 or 3 neighbors survives, any dead cell with exactly 3 neighbors becomes alive,
+            and all other cells die or stay dead.</p>
+        </div>
+    </div>
+
     <script type="module">
         import init, { Gol } from './pkg/game_of_life.js';
 
+        let generation = 0;
+        let isPaused = false;
+        let animationId = null;
+        let gol = null;
+
         async function run() {
-            await init();
+            try {
+                await init();
+                const canvas = document.getElementById('game-of-life-canvas');
+                const ctx = canvas.getContext('2d');
+                
+                gol = new Gol(canvas.width, canvas.height);
+                
+                document.getElementById('loading').classList.add('hidden');
 
-            const canvas = document.getElementById('game-of-life-canvas');
-            const ctx = canvas.getContext('2d');
-            
-            const gol = new Gol(canvas.width, canvas.height);
+                function render() {
+                    if (!isPaused) {
+                        gol.generate();
+                        generation++;
+                        document.getElementById('generation').textContent = `Gen: ${generation}`;
+                        // ここで生きているセルの数を数えるロジックを追加できます
+                        // document.getElementById('alive').textContent = `Alive: ${livingCells}`;
+                    }
+                    
+                    gol.display(ctx);
+                    animationId = requestAnimationFrame(render);
+                }
 
-            function render() {
-                gol.generate();
-                gol.display(ctx);
-                requestAnimationFrame(render);
+                document.getElementById('reset-button').addEventListener('click', () => {
+                    generation = 0;
+                    gol.init();
+                });
+
+                document.getElementById('pause-button').addEventListener('click', () => {
+                    isPaused = !isPaused;
+                    const icon = document.getElementById('pause-icon');
+                    const text = document.getElementById('pause-text');
+                    if (isPaused) {
+                        icon.classList.remove('fa-pause');
+                        icon.classList.add('fa-play');
+                        text.textContent = 'Resume';
+                    } else {
+                        icon.classList.remove('fa-play');
+                        icon.classList.add('fa-pause');
+                        text.textContent = 'Pause';
+                    }
+                });
+
+                render();
+            } catch (error) {
+                console.error('Failed to initialize:', error);
+                document.getElementById('loading').innerHTML = `
+                    <div style="color: red; text-align: center;">
+                        <p>Failed to load the simulation.</p>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
             }
-
-            document.getElementById('reset-button').addEventListener('click', () => {
-                gol.init();
-            });
-
-            render();
         }
 
         run();
