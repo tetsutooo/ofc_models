@@ -2,6 +2,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: white;
 }
 
 header {
@@ -60,31 +62,37 @@ main {
     gap: 20px;
 }
 
-#game-canvas, #line-canvas {
-    border: 1px solid #ccc;
-    background: white;
+#game-canvas {
+    border: 1px solid #333;
+}
+
+#graph-canvas {
+    border: 1px solid #333;
+    margin-top: 10px;
 }
 
 .controls {
     display: flex;
     gap: 10px;
+    margin: 10px 0;
 }
 
 button {
     padding: 8px 16px;
     font-size: 14px;
     cursor: pointer;
-    background-color: #00B4D8;
+    background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 4px;
+    transition: background-color 0.2s;
 }
 
 button:hover {
-    background-color: #0096b4;
+    background-color: #45a049;
 }
 
 button:disabled {
-    background-color: #ccc;
+    background-color: #666;
     cursor: not-allowed;
 }
